@@ -441,7 +441,42 @@ function VehicleInfo() {
   }
 }
 
+function IMEIInfo() {
+  var imei_str = 
+	
+  // IMEI Number
+  setValue('#holderDeviceInfo\\[0\\]\\.pedIdNum', this.getField('IMEI Number').value) +
+  
+  // Confirm IMEI Number
+  setValue('#holderDevqiceInfo\\[0\\]\\.conPedIdNum', this.getField('IMEI Number').value) +
 
+  // Stolen / Not Stolen
+  //setOption('#holderDeviceInfo\\[0\\]\\.imeiStolen', this.getField('Veh_Style_ComboBox').value) +
+  
+  // Cell Phone #
+  setValue('#holderDeviceInfo\\[0\\]\\.pedTelNum', this.getField('Text51').value) +
+  
+  // Carrier
+  setOption('#holderDeviceInfo\\[0\\]\\.acctCarrier', 5) +
+
+  // Other
+  setValue('#holderDeviceInfo\\[0\\]\\.acctCarrierOthr', this.getField('Carrier').value) +
+
+  // Make
+  setValue('#holderDeviceInfo\\[0\\]\\.pedMake', this.getField('Make_3').value) +
+  
+  // Model
+  setValue('#holderDeviceInfo\\[0\\]\\.pedModel', this.getField('Model_2').value) +
+  
+  // Insured
+  setOption('#holderDeviceInfo\\[0\\]\\.pedInsured', this.getField('Insured').value) 
+
+  if( this.getField('IMEI Number').value === '') {
+    return '';
+  } else {
+    return `setTimeout(() => { document.querySelector("#deviceInfoHeader > a.link").click(); ${imei_str};}, 2000);`
+  }
+}
 
 this.getField('output1').value =
   // Cmd/PCt Taking Report
@@ -626,7 +661,9 @@ this.getField('output1').value =
   // Vehicle ////////////////////////////////////////////////////////////////////
   VehicleInfo() +
 
-  // TODO: IMEI
+  // IMEI ///////////////////////////////////////////////////////////////////////
+  IMEIInfo() +
+
   // TODO: Property
 
   // Evidence Collected
