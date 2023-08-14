@@ -478,6 +478,78 @@ function IMEIInfo() {
   }
 }
 
+function PropertyInfo() {
+  var PropInvLetter;
+  switch (this.getField('Property Involvement1').value) {
+    case '': PropInvLetter = '';
+      break;
+    case 'C': PropInvLetter = '1';
+      break;
+    case 'E': PropInvLetter = '2';
+      break;
+    case 'F': PropInvLetter = '3';
+      break;
+    case 'B': PropInvLetter = '4';
+      break;
+    case 'D': PropInvLetter = '6';
+      break;
+    case 'A': PropInvLetter = '7';
+      break;
+    case 'G': PropInvLetter = '8';
+      break;
+    default:  PropInvLetter = '';
+  }
+
+  // Property Value: Check for dollar sign in the beginning of string, if found, remove it
+  var value_str = this.getField('Property Value1').value;
+  if(value_str[0] === '$') value_str = value_str.slice(1); 
+  
+  var value_recov_str = this.getField('Value Recovered1').value;
+  if(value_recov_str[0] === '$') value_recov_str = value_recov_str.slice(1); 
+
+  var property_str = 
+	
+  // Property Involvement
+  setOption('#holderProperty\\[0\\]\\.propertyInv', PropInvLetter) +
+
+  // Property Recovered
+  setOption('#holderProperty\\[0\\]\\.recovered', (this.getField('Recovered1').value) === 'Y' ? 1 : 2) +
+  
+  // Property Category
+
+  // Property Type
+
+  // Property Use 
+  setOption('#holderProperty\\[0\\]\\.busiPers', this.getField('Property Use').value) +
+  
+  // Owner Identification #
+
+  // Item #
+  setValue('#holderProperty\\[0\\]\\.uf61Counterid', this.getField('Item No1').value) +
+  
+  // Quantity
+  setValue('#holderProperty\\[0\\]\\.quantity', this.getField('Quantity1').value) +
+  
+  // Description
+  setValue('#holderProperty\\[0\\]\\.evidence', this.getField('Property Desc1').value) +
+  
+  // Serial Number
+
+  // Confirm Serial Number
+
+  // Value ($)
+  setValue('#holderProperty\\[0\\]\\.valStolen', value_str) +
+
+  // Value Recovered ($)
+  setValue('#holderProperty\\[0\\]\\.valRecover', value_recov_str)
+
+  if( this.getField('Property Involvement1').value === '') {
+    return '';
+  } else {
+    return `setTimeout(() => { document.querySelector("#propHeader > a.link").click(); ${property_str};}, 2000);`
+  }
+}
+
 this.getField('output1').value =
   // Cmd/PCt Taking Report
   setValue('#uf61Statistics\\.reportPct', this.getField('Command').value) +
@@ -664,7 +736,8 @@ this.getField('output1').value =
   // IMEI ///////////////////////////////////////////////////////////////////////
   IMEIInfo() +
 
-  // TODO: Property
+  // Property ///////////////////////////////////////////////////////////////////
+  PropertyInfo()+
 
   // Evidence Collected
   setOption("#uf61Statistics\\.evidenceCollect", this.getField('Evidence Collected').value) +
