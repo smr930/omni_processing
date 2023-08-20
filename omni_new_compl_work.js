@@ -545,15 +545,19 @@ function setProperty(i) {
 }
 
 function PropertyInfo() {
+  var outStr = '';
 
   if( this.getField('Property Involvement1').value === '') {
-    return '';
+    return outStr;
   } else {
-    return `setTimeout(() => { document.querySelector("#propHeader > a.link").click(); ${setProperty(0)}; 
-                               document.querySelector("#propHeader > a.link").click(); ${setProperty(1)}; 
-                               document.querySelector("#propHeader > a.link").click(); ${setProperty(2)};
-  }, 2000);`
+    for (var i = 0; i < 5; i++) {
+      if(this.getField(`Property Involvement${i+1}`).value !== '') {
+        outStr += `setTimeout(() => { document.querySelector("#propHeader > a.link").click(); ${setProperty(i)}; }, 2000);`
+      }
+    }
   }
+
+  return outStr;
 }
 
 this.getField('output1').value =
