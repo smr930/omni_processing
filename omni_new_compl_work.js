@@ -478,9 +478,9 @@ function IMEIInfo() {
   }
 }
 
-function PropertyInfo() {
+function setProperty(i) {
   var PropInvLetter;
-  switch (this.getField('Property Involvement1').value) {
+  switch (this.getField(`Property Involvement${i+1}`).value) {
     case '': PropInvLetter = '';
       break;
     case 'C': PropInvLetter = '1';
@@ -501,52 +501,58 @@ function PropertyInfo() {
   }
 
   // Property Value: Check for dollar sign in the beginning of string, if found, remove it
-  var value_str = this.getField('Property Value1').value;
+  var value_str = this.getField(`Property Value${i+1}`).value;
   if(value_str[0] === '$') value_str = value_str.slice(1); 
   
-  var value_recov_str = this.getField('Value Recovered1').value;
+  var value_recov_str = this.getField(`Value Recovered${i+1}`).value;
   if(value_recov_str[0] === '$') value_recov_str = value_recov_str.slice(1); 
 
   var property_str = 
-	
+
   // Property Involvement
-  setOption('#holderProperty\\[0\\]\\.propertyInv', PropInvLetter) +
+  setOption(`#holderProperty\\[${i}\\]\\.propertyInv`, PropInvLetter) +
 
   // Property Recovered
-  setOption('#holderProperty\\[0\\]\\.recovered', (this.getField('Recovered1').value) === 'Y' ? 1 : 2) +
+  setOption(`#holderProperty\\[${i}\\]\\.recovered`, (this.getField(`Recovered${i+1}`).value) === 'Y' ? 1 : 2) +
   
   // Property Category
-
   // Property Type
 
   // Property Use 
-  setOption('#holderProperty\\[0\\]\\.busiPers', this.getField('Property Use').value) +
+  setOption(`#holderProperty\\[${i}\\]\\.busiPers`, this.getField('Property Use').value) +
   
   // Owner Identification #
 
   // Item #
-  setValue('#holderProperty\\[0\\]\\.uf61Counterid', this.getField('Item No1').value) +
+  setValue(`#holderProperty\\[${i}\\]\\.uf61Counterid`, this.getField(`Item No${i+1}`).value) +
   
   // Quantity
-  setValue('#holderProperty\\[0\\]\\.quantity', this.getField('Quantity1').value) +
+  setValue(`#holderProperty\\[${i}\\]\\.quantity`, this.getField(`Quantity${i+1}`).value) +
   
   // Description
-  setValue('#holderProperty\\[0\\]\\.evidence', this.getField('Property Desc1').value) +
+  setValue(`#holderProperty\\[${i}\\]\\.evidence`, this.getField(`Property Desc${i+1}`).value) +
   
   // Serial Number
-
   // Confirm Serial Number
 
   // Value ($)
-  setValue('#holderProperty\\[0\\]\\.valStolen', value_str) +
+  setValue(`#holderProperty\\[${i}\\]\\.valStolen`, value_str) +
 
   // Value Recovered ($)
-  setValue('#holderProperty\\[0\\]\\.valRecover', value_recov_str)
+  setValue(`#holderProperty\\[${i}\\]\\.valRecover`, value_recov_str);
+
+  return property_str;
+}
+
+function PropertyInfo() {
 
   if( this.getField('Property Involvement1').value === '') {
     return '';
   } else {
-    return `setTimeout(() => { document.querySelector("#propHeader > a.link").click(); ${property_str};}, 2000);`
+    return `setTimeout(() => { document.querySelector("#propHeader > a.link").click(); ${setProperty(0)}; 
+                               document.querySelector("#propHeader > a.link").click(); ${setProperty(1)}; 
+                               document.querySelector("#propHeader > a.link").click(); ${setProperty(2)};
+  }, 2000);`
   }
 }
 
