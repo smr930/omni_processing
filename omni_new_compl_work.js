@@ -238,6 +238,7 @@ function CvInfo() {
 
   // Actions of Victim Prior to Incident
   setValue("#holderDetails\\[0\\]\\.details", this.getField('fill_58_2').value) +
+  //setValue("#holderVictim\\[0\\]\\.holderDetails\\[0\\]\\.details", this.getField('fill_58_2').value) +  // On actual OMNI, this works
 
   // Victim of Similar Incident 
   setOption("#holderVictim\\[0\\]\\.nmatName\\.victSimIncid", this.getField('EXCEPT SEX OFFENSE').value) +
@@ -516,6 +517,8 @@ function setProperty(i) {
   setOption(`#holderProperty\\[${i}\\]\\.recovered`, (this.getField(`Recovered${i+1}`).value) === 'Y' ? 1 : 2) +
   
   // Property Category
+  setOption(`#holderProperty\\[${i}\\]\\.propertyCat`, this.getField(`Prop_Cat_Combo_Box${i+1}`).value) +
+  
   // Property Type
 
   // Property Use 
