@@ -553,8 +553,10 @@ function PropertyInfo() {
   if( this.getField('Property Involvement1').value === '') {
     return outStr;
   } else {
-    for (var i = 0; i < 5; i++) {
-      if(this.getField(`Property Involvement${i+1}`).value !== '') {
+    for (var i = 0; i < 26; i++) {
+      if(this.getField(`Property Involvement${i+1}`).value === '') {
+        break;    
+      } else {
         outStr += `setTimeout(() => { document.querySelector("#propHeader > a.link").click(); ${setProperty(i)}; }, 2000);`
       }
     }
