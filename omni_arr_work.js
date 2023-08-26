@@ -27,18 +27,15 @@ function getChart(squad) {
 	const squadLetter = this.getField(squad).value;
 	const letter = squadLetter.charAt(0);
 	switch (letter) {
-  case '':
-    return '';
-    break;
-  case 'A':
-	return '5';
-    break;
-  case 'B':
-	return '44';
-    break;
-  case 'C':
-	return '43';
-    break;
+		case '': return '';
+			break;
+		case 'A': return '5';
+			break;
+		case 'B': return '44';
+			break;
+		case 'C': return '43';
+			break;
+		default: return '';
 	}
 }
 
@@ -56,6 +53,7 @@ function getCounty(county) {
 		break;
 	  case 'RICHMOND': return '5';
 		break;
+	  default: return '';
 	}
   }
   
@@ -73,6 +71,7 @@ function getCounty(county) {
 		break;
 	  case 'STATEN ISLAND': return '5';
 		break;
+	  default: return '';
 	}
   }
 
@@ -188,11 +187,40 @@ function setIMEI(selector, value) {
 	return `document.querySelector("${outStr}").value=` + `${value};`;
 }
 
-var DeftNumOfCalls = false;
-if(this.getField('DeftTotalCalls').value === '' || this.getField('DeftTotalCalls').value === 0)
-	DeftNumOfCalls = true;
-else
-	DeftNumOfCalls = false;
+function DeftCallsMade() {
+	var outStr = '';
+	if((this.getField('DeftTotalCalls').value === '' || this.getField('DeftTotalCalls').value === 0) && this.getField('AreaCode1').value === '') {
+		outStr += setCheckbox("#defendRefused", true);
+	}
+	else {
+		// Phone Number #1
+		outStr += setValue("#defendCall1\\.phoneNum", this.getField('AreaCode1').value.toString() + this.getField('Tele_3_1').value + this.getField('Tele_4_1').value);
+		outStr += setValue("#defendCall1\\.namel", this.getField('Tele_LName_1').value);
+		outStr += setValue("#defendCall1\\.namef", this.getField('Tele_FName_1').value);
+		outStr += setValue("#defendCall1\\.cellPhoneName", this.getField('Tele_ListedName_1').value);
+		outStr += setOption("#defendPhoneName1\\.posiRelat", this.getField('Tele_Relationship_1').value);
+		outStr += setOption("#defendCall1\\.callCompleted", this.getField('Tele_CallCompleted1').value);
+		
+		// Phone Number #2
+		outStr += setValue("#defendCall2\\.phoneNum", this.getField('AreaCode0').value.toString() + this.getField('Tele_3_0').value + this.getField('Tele_4_0').value);
+		outStr += setValue("#defendCall2\\.namel", this.getField('Tele_LName_0').value);
+		outStr += setValue("#defendCall2\\.namef", this.getField('Tele_FName_0').value);
+		outStr += setValue("#defendCall2\\.cellPhoneName", this.getField('Tele_ListedName_0').value);
+		outStr += setOption("#defendPhoneName2\\.posiRelat", this.getField('Tele_Relationship_0').value);
+		outStr += setOption("#defendCall2\\.callCompleted", this.getField('Tele_CallCompleted2').value);
+		
+		// Phone Number #3
+		outStr += setValue("#defendCall3\\.phoneNum", this.getField('AreaCode2').value.toString() + this.getField('Tele_3_2').value + this.getField('Tele_4_2').value);
+		outStr += setValue("#defendCall3\\.namel", this.getField('Tele_LName_2').value);
+		outStr += setValue("#defendCall3\\.namef", this.getField('Tele_FName_2').value);
+		outStr += setValue("#defendCall3\\.cellPhoneName", this.getField('Tele_ListedName_2').value);
+		outStr += setOption("#defendPhoneName3\\.posiRelat", this.getField('Tele_Relationship_2').value);
+		outStr += setOption("#defendCall3\\.callCompleted", this.getField('Tele_CallCompleted3').value);
+	}
+
+	return outStr;
+}
+
 
 function DeftPhoneNumbersEmail() {
 	var outputStr = '';
@@ -225,6 +253,7 @@ function DeftPhoneNumbersEmail() {
 	else
 		return outputStr;
 }
+
 
 function VouchersInfo() {
 	//var outStr = '';
@@ -310,7 +339,7 @@ setOption('#assistingOfficerInfo\\.aoInUnif', this.getField("InUniform_AssistOff
 // Squad
 setValue('#assistingOfficerInfo\\.aoSquad', this.getField("Text2").value) +
 // Chart
-setOption('#assistingOfficerInfo\\.aoChart', getChart("Text15")) +
+setOption('#assistingOfficerInfo\\.aoChart', getChart("Text2")) +
 // Primary Assignment
 setOption('#assistingOfficerInfo\\.aoAssigned', this.getField("PrimAssignment_AssistOff").value) +
 // Force Used
@@ -338,6 +367,7 @@ setValue('#arrestInfo\\.icadNum', this.getField("ICAD No").value) +
 // Current Location of Perpetrator
 setOption("#arrestInfo\\.perpBoroughLoc", this.getField("LocationOfPrisoner").value) +
 setOption("#arrestInfo\\.perpLocType", this.getField("LocationOfPrisonerType0").value) +
+// setOption("#arrestInfo\\.perpLocation", 20); // 20: 084 Precinct, Actual OMNI
 
 // Location of Occurrence / location of Arrest
 setOption("#addrArrstAddress\\.location", this.getField("Check Box5345").value) +
@@ -412,12 +442,23 @@ setOption("#defendDetails\\.pdatPedig\\.physCond", this.getField("PhyCondition2"
 // Type of Drug Used?
 setOption("#defendDetails\\.pdatPedig\\.drugUsed", this.getField("TypeOfDrugUsed").value) +
 
-//Defendant Calls Made
-//`document.querySelector("#defendRefused").checked=` + DeftNumOfCalls; +
+// Defendant Calls Made
+DeftCallsMade() +
 
 // Defendant ID Type
 setOption("#arrestInfo\\.identificationId", this.getField("ID_Type_ComboBox").value) +
 setValue("#arrestInfo\\.identificationNum", this.getField("Text40").value) +
+
+// Defendant Licenses
+
+// License/Permit Type
+setOption("#defendLicense\\.licType", this.getField("LicPermitType").value) +
+
+// License Number
+setValue("#defendLicense\\.licNo", this.getField("LicPermitNum").value) +
+
+// Juvenile
+//JuvenileInfo() +
 
 // Vehicle ///////////////////////////////////////////////
 VehicleInfo() +
