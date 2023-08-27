@@ -18,7 +18,7 @@ function setValue(selector, value) {
   
   // Use for checking a Checkbox
   function setCheckbox(selector, value) {
-	  if(value === '' || value === ' ' || value === 'Off' || value === undefined) return '';
+	if(value === '' || value === ' ' || value === 'Off' || value === undefined) return '';
 	const outStr = selector.split('\\').join('\\\\');
 	return `document.querySelector("${outStr}").checked=` + `${value};`;
   }
@@ -177,16 +177,6 @@ function getCounty(county) {
 	}
 }
 
-function setIMEI(selector, value) {
-	if(value === '') return '';
-	const temp = selector.split(".");
-	var first = '#' + temp[0].slice(0, 16) + '\\\\' + temp[0].slice(16);
-	first = first.slice(0, 21) + '\\\\' + first.slice(21);
-	first = first.slice(0, 24) + '\\\\' + first.slice(24) + '.';
-	const outStr = first + temp[1];
-	return `document.querySelector("${outStr}").value=` + `${value};`;
-}
-
 function DeftCallsMade() {
 	var outStr = '';
 	if((this.getField('DeftTotalCalls').value === '' || this.getField('DeftTotalCalls').value === 0) && this.getField('AreaCode1').value === '') {
@@ -221,59 +211,169 @@ function DeftCallsMade() {
 	return outStr;
 }
 
+function JuvenileInfo() {
+	var outStr = '';
+	if(this.getField('JuvOffender').value === '' || this.getField('JuvOffender').value === 'Off' || this.getField('JuvOffender').value === 2) {
+
+	}
+	else {
+	outStr += setCheckbox("#arrestInfo\\.juvOffInd", this.getField('JuvOffender').value);
+
+	// Relative Notified Type
+	outStr += setOption("#arrestInfo\\.juvRelType", this.getField('Juvi Relative Notified').value);
+
+	// # of Priors
+	outStr += setValue("#arrestInfo\\.juvNumPrior", this.getField('NumOfPriors').value);
+	
+	// Name
+	outStr += setValue("#arrestInfo\\.juvRelNotify", this.getField('Relative Name').value);
+	
+	// School Attending
+	outStr += setValue("#arrestInfo\\.juvSchool", this.getField('SchoolAttending').value);
+	
+	// Time Notified
+	outStr += setValue("#juvenileDetails\\.juvenilePhone\\.callTime", this.getField('Relative Time Notified').value);
+	
+	// Mother's Maiden Name
+	outStr += setValue("#arrestInfo\\.juvMoMaiden", this.getField('Mother Name').value);
+
+	// Phone Number
+	outStr += setValue("#juvenileDetails\\.juvenilePhone\\.phoneNum", this.getField('Relative Tele AreaC').value.toString() + this.getField('Relative Tele AreaC0').value);
+	
+	// Personal Recog
+	outStr += setOption("#arrestInfo\\.rorCd", this.getField('JuvPersRecog').value);
+	}
+
+	return outStr;
+}
+
+function IMEIInfo() {  
+	if(this.getField('DEFT_IMEI Number').value === '') {
+		return `setTimeout(() => { document.querySelector("#id2 > tbody > tr > td:nth-child(3) > a").click();}, 2000);`
+	} else {
+		var imei_str = 
+		// IMEI Number
+		setValue('#holderDeviceInfo\\[0\\]\\.pedIdNum', this.getField('DEFT_IMEI Number').value) +
+		
+		// Confirm IMEI Number      
+		setValue('#holderDeviceInfo\\[0\\]\\.conPedIdNum', this.getField('DEFT_IMEI Number').value) +
+	  
+		// Cell Phone #
+		setValue('#holderDeviceInfo\\[0\\]\\.pedTelNum', this.getField('deft cell tel 0').value.toString() + 
+						  this.getField('deft cell tel 1').value + this.getField('deft cell tel 2').value) +	
+		// Carrier, 5: Other
+		setOption('#holderDeviceInfo\\[0\\]\\.acctCarrier', 5) +
+	  
+		// Other
+		setValue('#holderDeviceInfo\\[0\\]\\.acctCarrierOthr', this.getField('DEFT_Carrier').value) +
+	  
+		// Make
+		setValue('#holderDeviceInfo\\[0\\]\\.pedMake', this.getField('Make_3').value) +
+		
+		// Model
+		setValue('#holderDeviceInfo\\[0\\]\\.pedModel', this.getField('Model_2').value) +
+		
+		// Insured
+		setOption('#holderDeviceInfo\\[0\\]\\.pedInsured', this.getField('Insured').value);
+	  	return imei_str;
+	}
+  }
 
 function DeftPhoneNumbersEmail() {
 	var outputStr = '';
 	// Home Phone #
-	const deftHomeNum = this.getField("Text38").value;
-	if(deftHomeNum === '') 
-		outputStr += setOption2("defendDetails.homePhone.unknown", 1);
+	if(this.getField("deft home tel 0").value === '') 
+		outputStr += setOption("#defendDetails\\.homePhone\\.unknown", 1);
 	else
-		outputStr += setValue2("defendDetails.homePhone.phoneNum", this.getField("Text38").value);
-	
+		outputStr += setValue("#defendDetails\\.homePhone\\.phoneNum", this.getField('deft home tel 0').value.toString() + 
+					 this.getField('deft home tel 1').value + this.getField('deft home tel 2').value);
 	// Business Phone #
-	outputStr += setOption2("defendDetails.bizPhone.unknown", 1);
+	outputStr += setOption("#defendDetails\\.bizPhone\\.unknown", 1);
 	
 	// Cell Phone #
-	const deftCellNum = this.getField("Text1").value;
-	if(deftCellNum === '') 
-		outputStr += setOption2("defendDetails.cellPhone.unknown", 1);
+	if(this.getField("deft cell tel 0").value === '') 
+		outputStr += setOption("#defendDetails\\.cellPhone\\.unknown", 1);
 	else
-		outputStr += setValue2("defendDetails.cellPhone.phoneNum", this.getField("Text1").value);
-	
+		outputStr += setValue("#defendDetails\\.cellPhone\\.phoneNum", this.getField('deft cell tel 0').value.toString() + 
+					 this.getField('deft cell tel 1').value + this.getField('deft cell tel 2').value);
 	// Email
-	const deftEmail = this.getField("DEFT Email").value;
-	if(deftHomeNum === '') 
-		outputStr += setOption2("defendDetails.emailAddr.unknown", 1);
+	if(this.getField("DEFT Email").value === '') 
+		outputStr += setOption("#defendDetails\\.emailAddr\\.unknown", 1);
 	else
-		outputStr += setValue2("defendDetails.emailAddr.name", this.getField("DEFT Email").value);
+		outputStr += setValue("#defendDetails\\.emailAddr\\.name", this.getField("DEFT Email").value);
 
-	if(outputStr === '')
-		return;
-	else
-		return outputStr;
+	return outputStr;
 }
 
+function MoInfo() {
+	var outStr = '';
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[0\\]\\.ucatItem", this.getField("DEFT MO AskedQ").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[1\\]\\.ucatItem", this.getField("DEFT MO BagO").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[2\\]\\.ucatItem", this.getField("DEFT MO BicycleU").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[3\\]\\.ucatItem", this.getField("DEFT MO CarJ").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[4\\]\\.ucatItem", this.getField("DEFT MO ConG").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[5\\]\\.ucatItem", this.getField("DEFT MO DeceptU").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[6\\]\\.ucatItem", this.getField("DEFT MO EntryTW").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[7\\]\\.ucatItem", this.getField("DEFT MO FollowedV").value);
+
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[9\\]\\.ucatItem", this.getField("DEFT MO FollowedVB").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[25\\]\\.ucatItem", this.getField("DEFT MO FoodD").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[10\\]\\.ucatItem", this.getField("DEFT MO Hij").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[11\\]\\.ucatItem", this.getField("DEFT MO JewelSnatch").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[12\\]\\.ucatItem", this.getField("DEFT MO JumpedFV").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[13\\]\\.ucatItem", this.getField("DEFT MO MotorC").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[14\\]\\.ucatItem", this.getField("DEFT MO NoteP").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[15\\]\\.ucatItem", this.getField("DEFT MO OpenedS").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[16\\]\\.ucatItem", this.getField("DEFT MO Payroll").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[18\\]\\.ucatItem", this.getField("DEFT MO PerpMadeSt").value);
+
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[19\\]\\.ucatItem", this.getField("DEFT MO OfferedS").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[20\\]\\.ucatItem", this.getField("DEFT MO PickP").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[21\\]\\.ucatItem", this.getField("DEFT MO PropSn").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[22\\]\\.ucatItem", this.getField("DEFT MO PushIn").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[23\\]\\.ucatItem", this.getField("DEFT MO PurseW").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[24\\]\\.ucatItem", this.getField("DEFT MO TookV").value);
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[17\\]\\.ucatItem", this.getField("DEFT MO Other").value);
+	if(this.getField("DEFT MO Other").value === 1)
+		outStr += setValue("#defendDetails\\.modusOperandi\\[17\\]\\.itemOther", this.getField("DEFT MO OTHER").value + ' ' + this.getField("DEFT MO OTHER2").value);
+
+	outStr += setCheckbox("#defendDetails\\.modusOperandi\\[8\\]\\.ucatItem", this.getField("DEFT MO TRANSIT").value);
+
+	// Action Toward Victim
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[0\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD VIC").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[1\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD INJ PI").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[2\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD MADE STRP").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[3\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD PEPPER SPR").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[4\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD SLASH").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[4\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD STAB").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[5\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD STRK W OBJ").value);
+
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[6\\]\.ucatItem", this.getField("DEFT ACTION TOWARD TIED HC").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[7\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD TORTURE").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[8\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD USD THR FLAME").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[9\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD UNK NON").value);
+	outStr += setCheckbox("#defendDetails\\.actionToVictim\\[10\\]\\.ucatItem", this.getField("DEFT ACTION TOWARD OTHER").value);
+	if(this.getField("DEFT ACTION TOWARD OTHER").value === 1)
+		outStr += setValue("#defendDetails\\.actionToVictim\\[10\\]\\.itemOther", this.getField("DEFT ACTION TOWARD VIC OTHER1").value + ' ' + 
+				    this.getField("DEFT ACTION TOWARD VIC OTHER2").value  + ' ' + this.getField("DEFT ACTION TOWARD VIC OTHER3").value + ' ' + 
+					this.getField("DEFT ACTION TOWARD VIC OTHER4").value);	
+	return outStr;
+}
 
 function VouchersInfo() {
 	//var outStr = '';
 	if(this.getField('ArrInvoiceNum').value === '') { // if Vouchers field is empty, remove Voucher Section
 	  return `setTimeout(() => { document.querySelector("#id1 > tbody > tr > td:nth-child(3) > a").click(); }, 1000);`
-	}
-	// Otherwise fill in the voucher info
-	// TODO
+	} // Otherwise fill in the voucher info     // TODO
 }
 
 function MaleOrFemale() {
-	if(this.getField("Check Box49").value === 'Off' && this.getField("Check Box50").value === 'Off')
-		return ''
+	if(this.getField("Check Box49").value === 'Off' && this.getField("Check Box50").value === 'Off') return ''
 	
-	if(this.getField("Check Box49").value === 'true') { 
+	if(this.getField("Check Box49").value === 'true') 
 		return `document.getElementsByName('defendDetails.pdatPedig.sex')[0].checked=true;` 
-	}
-	else {
+	else
 		return `document.getElementsByName('defendDetails.pdatPedig.sex')[1].checked=true;`
-	} 
 }
 
 function Race() {
@@ -295,7 +395,6 @@ function Race() {
 	if(this.getField("Race_His.W").value === 'true')  
 		return `document.getElementsByName('defendDetails.pdatPedig.race')[6].checked=true;`			 
 }
-
 
 this.getField("output2").value = 
 /////////////////////
@@ -350,7 +449,8 @@ setOption('#assistingOfficerInfo\\.aoInjured', this.getField("Inj_AssistOff").va
 setOption('#assistingOfficerInfo\\.aoBodyCam', this.getField("BWC_assistOff").value) +
 
 // Arrest time
-setValue('#arrestInfo\\.strArrTime', this.getField("Arrest Time").value.toString().length < 4 ? this.getField('Arrest Time').value.toString().padStart(4, '0'): this.getField('Arrest Time').value) +
+setValue('#arrestInfo\\.strArrTime', this.getField("Arrest Time").value.toString().length < 4 ? 
+         this.getField('Arrest Time').value.toString().padStart(4, '0'): this.getField('Arrest Time').value) +
 
 // Arrest Date
 setValue('#arrestInfo\\.strArrDate', this.getField("M").value + '/' + this.getField("D").value + '/' + this.getField("Y").value) +
@@ -358,7 +458,7 @@ setValue('#arrestInfo\\.strArrDate', this.getField("M").value + '/' + this.getFi
 // Arrest Processing Type, 3: DAT, 5: Online
 setOption("#arrestInfo\\.arrProcType", this.getField("DAT_Offense").value) +
 
-// Special Event Code
+// Special Event Code, 2: None
 setOption("#arrestInfo\\.crimEventType", 2) +
 
 // ICAD #
@@ -450,7 +550,6 @@ setOption("#arrestInfo\\.identificationId", this.getField("ID_Type_ComboBox").va
 setValue("#arrestInfo\\.identificationNum", this.getField("Text40").value) +
 
 // Defendant Licenses
-
 // License/Permit Type
 setOption("#defendLicense\\.licType", this.getField("LicPermitType").value) +
 
@@ -458,19 +557,16 @@ setOption("#defendLicense\\.licType", this.getField("LicPermitType").value) +
 setValue("#defendLicense\\.licNo", this.getField("LicPermitNum").value) +
 
 // Juvenile
-//JuvenileInfo() +
+JuvenileInfo() +
 
 // Vehicle ///////////////////////////////////////////////
 VehicleInfo() +
 
-// Phone
-// IMEI Number
-//setIMEI("##holderDeviceInfo\\[0\\]\\.pedIdNum", this.getField('DEFT_IMEI Number').value) +
-//setIMEI("##holderDeviceInfo\\[0\\]\\.conPedIdNum", this.getField('DEFT_IMEI Number').value) +
-//setIMEI("##holderDeviceInfo\\[0\\]\\.pedTelNum", this.getField('deft cell tel 0').value.toString() + this.getField('deft cell tel 1').value + this.getField('deft cell tel 2').value) +
+// Deft IMEI
+IMEIInfo() +
 
 // Deft Recording Police Activity
-setOption("#arrestInfo\\.recordPoliceActivity", 1) + // todo
+setOption("#arrestInfo\\.recordPoliceActivity", 1) + 
 
 // Narrative
 setValue("#narratDetails\\.details", this.getField("61 narrative_1").value) +
@@ -491,22 +587,12 @@ setValue("#defMdlName", this.getField("DEFT MI").value) +
 // Order of Protection
 setOption("#defendDetails\\.pdatPedig\\.opInEffect", this.getField("OrderOfProt").value) +
 
-// Male / Female
+// Sex
 MaleOrFemale() +
 
-/* setRadio("defendDetails.pdatPedig.sex", this.getField("Check Box49").value) +
-setRadio("defendDetails.pdatPedig.sex", this.getField("Check Box50").value) 
-
-//document.querySelector("#defendDetails\\.pdatPedig\\.sex").checked=true
-document.querySelector("#defendDetails\\.pdatPedig\\.sex").checked='Yes';
-document.querySelector("#defendDetails\\.pdatPedig\\.sex").checked='true';
-document.querySelector("#defendDetails\\.pdatPedig\\.sex").value=true; */
-
-// Height
+// Height and Weight
 setValue("#defendDetails\\.pdatPedig\\.heightFeet", this.getField("Text41").value) +
 setValue("#defendDetails\\.pdatPedig\\.heightInches", this.getField("Text42").value) +
-
-// Weight
 setValue("#defendDetails\\.pdatPedig\\.weight", this.getField("Text43").value) +
 
 // Race
@@ -543,7 +629,7 @@ setValue("#defendDetails\\.addrResAddress\\.zip", this.getField("Zip").value) +
 // Apt
 setValue("#defendDetails\\.addrResAddress\\.aptNum", this.getField("Apt").value) +
 
-//DeftPhoneNumbersEmail(); + 
+DeftPhoneNumbersEmail() + 
 
 // Is this person not Proficient in English?
 setOption("#defendDetails\\.nmatName\\.interpNeeded", this.getField("DEFT PROF ENG").value) +
@@ -560,6 +646,9 @@ setOption("#defendDetails\\.nmatName\\.identify", this.getField("DEFT CAN ID PER
 // Victim states Suspect is
 setOption("#defendDetails\\.nmatName\\.posiRelat", this.getField("DEFT VICT STATES").value) +
 
+// Social Security Number
+setValue("#defendDetails\\.nmatName\\.ssNum", this.getField("ssn").value) +
+
 // NYCHA Resident
 setOption("#defendDetails\\.nmatName\\.haResident", this.getField("DEFT NYCHA RESID").value) +
 
@@ -575,10 +664,6 @@ setOption("#defendDetails\\.pdatPedig\\.onOffDuty", 2) +
 // Weapon
 // Weapon/Force
 setOption("#defendDetails\\.holderWeapon\\[0\\]\\.wpnForce", this.getField("DEFT PHY FORCE WEAP").value) +
-//DEFT PHY FORCE WEAP
-//input: #defendDetails\.holderWeapon\[0\]\.wpnForce
-//trimm: defendDetails.holderWeapon[0].wpnForce
-//document.querySelector("#defendDetails\\.holderWeapon\\[0\\]\\.wpnForce").options.selectedIndex=2;
 
 //Firearm Recovered
 setOption("#defendDetails\\.holderWeapon\\[0\\]\\.recovered", this.getField("DEFT FIREARM REC").value) +
@@ -597,6 +682,9 @@ setValue("#defendDetails\\.unusualMoStatement\\.itemOther", this.getField("DEFT 
 
 // Method of Flight
 setValue("#defendDetails\\.unusualMoMethodOfFl\\.itemOther", this.getField("DEFT METHOD OF FLIGHT").value) +
+
+// M.O.
+MoInfo() +
 
 // Impersonation of
 setOption("#defendDetails\\.unusualMoImpersonation\\.ucatItem", this.getField("DEFT IMPRES OF").value) +
