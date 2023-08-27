@@ -23,6 +23,13 @@ function setValue(selector, value) {
 	return `document.querySelector("${outStr}").checked=` + `${value};`;
   }
 
+// Enable a text field
+function enableTextField(selector) {
+	if(selector === '' || selector === null || selector === undefined) return '';
+	const outStr = selector.split('\\').join('\\\\');
+	return `document.querySelector("${outStr}").removeAttribute(\"disabled\");`;
+}
+
 function getChart(squad) {
 	const squadLetter = this.getField(squad).value;
 	const letter = squadLetter.charAt(0);
@@ -396,6 +403,89 @@ function Race() {
 		return `document.getElementsByName('defendDetails.pdatPedig.race')[6].checked=true;`			 
 }
 
+function DeftDescript() {
+	var outStr = '';
+	// Head Gear
+	outStr += setOption("#defendDetails\\.clothingDescription\\[0\\]\\.ucatItemType", this.getField("DEFT HEAD GEAR").value);
+	if(this.getField("DEFT HEAD GEAR").value === 6) // 6: Other
+		outStr += setValue("#defendDetails\\.clothingDescription\\[0\\]\\.itemOther", this.getField("DEFT HEADGEAR OTHER").value + ' ' + 
+				                 this.getField("DEFT HEADGEAR OTHER0").value  + ' ' + this.getField("DEFT HEADGEAR OTHER1").value);
+	
+	if(this.getField("DEFT HEAD GEAR").value !== 12) { // 12: UNK
+		outStr += setOption("#defendDetails\\.clothingDescription\\[0\\]\\.itemColor", this.getField("DEFT HEADGEAR COLOR").value);
+		outStr += enableTextField('#defendDetails\\.clothingDescription\\[0\\]\\.itemColor');
+	}
+
+	// Foot Gear
+	outStr += setOption("#defendDetails\\.clothingDescription\\[1\\]\\.ucatItemType", this.getField("DEFT FOOT WEAR").value);
+	if(this.getField("DEFT FOOT WEAR").value === 6) // 6: Other
+		outStr += setValue("#defendDetails\\.clothingDescription\\[1\\]\\.itemOther", this.getField("DEFT FOOTWEAR OTHER").value + ' ' + 
+				                 this.getField("DEFT FOOTWEAR OTHER0").value  + ' ' + this.getField("DEFT FOOTWEAR OTHER1").value);
+	
+	if(this.getField("DEFT FOOT WEAR").value !== 10) { // 10: UNK
+		outStr += setOption("#defendDetails\\.clothingDescription\\[1\\]\\.itemColor", this.getField("DEFT FOOTWEAR COLOR").value);
+		outStr += enableTextField('#defendDetails\\.clothingDescription\\[1\\]\\.itemColor');
+	}
+	
+	// Outer Wear
+	outStr += setOption("#defendDetails\\.clothingDescription\\[2\\]\\.ucatItemType", this.getField("DEFT OUTER WEAR").value);
+	if(this.getField("DEFT OUTER WEAR").value === 4) // 4: Other
+		outStr += setValue("#defendDetails\\.clothingDescription\\[2\\]\\.itemOther", this.getField("DEFT OUTERWEAR OTHER").value + ' ' + 
+				                 this.getField("DEFT OUTERWEAR OTHER0").value  + ' ' + this.getField("DEFT OUTERWEAR OTHER1").value);
+	
+	if(this.getField("DEFT OUTER WEAR").value !== 11) { // 11: UNK
+		outStr += setOption("#defendDetails\\.clothingDescription\\[2\\]\\.itemColor", this.getField("DEFT OUTERWEAR COLOR").value);
+		outStr += enableTextField('#defendDetails\\.clothingDescription\\[2\\]\\.itemColor');
+	}
+	
+	// Special Characteristics
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[0\\]\\.ucatItem", this.getField("DEFT SPEC CHAR0").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[1\\]\\.ucatItem", this.getField("DEFT SPEC CHAR1").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[2\\]\\.ucatItem", this.getField("DEFT SPEC CHAR2").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[3\\]\\.ucatItem", this.getField("DEFT SPEC CHAR3").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[4\\]\\.ucatItem", this.getField("DEFT SPEC CHAR4").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[5\\]\\.ucatItem", this.getField("DEFT SPEC CHAR5").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[6\\]\\.ucatItem", this.getField("DEFT SPEC CHAR6").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[7\\]\\.ucatItem", this.getField("DEFT SPEC CHAR7").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[8\\]\\.ucatItem", this.getField("DEFT SPEC CHAR8").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[9\\]\\.ucatItem", this.getField("DEFT SPEC CHAR9").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[10\\]\\.ucatItem", this.getField("DEFT SPEC CHAR10").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[11\\]\\.ucatItem", this.getField("DEFT SPEC CHAR11").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[12\\]\\.ucatItem", this.getField("DEFT SPEC CHAR12").value);
+	if(this.getField("DEFT SPEC CHAR12").value === 1)
+		outStr += setValue("#defendDetails\\.specialCharacteristics\\[12\\]\\.itemOther", this.getField("DEFT SPEC CHAR OTHER").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[13\\]\\.ucatItem", this.getField("DEFT SPEC CHAR13").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[14\\]\\.ucatItem", this.getField("DEFT SPEC CHAR14").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[15\\]\\.ucatItem", this.getField("DEFT SPEC CHAR15").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[16\\]\\.ucatItem", this.getField("DEFT SPEC CHAR16").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[17\\]\\.ucatItem", this.getField("DEFT SPEC CHAR17").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[18\\]\\.ucatItem", this.getField("DEFT SPEC CHAR18").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[19\\]\\.ucatItem", this.getField("DEFT SPEC CHAR19").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[20\\]\\.ucatItem", this.getField("DEFT SPEC CHAR20").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[21\\]\\.ucatItem", this.getField("DEFT SPEC CHAR21").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[22\\]\\.ucatItem", this.getField("DEFT SPEC CHAR22").value);
+	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[23\\]\\.ucatItem", this.getField("DEFT SPEC CHAR23").value);
+
+
+			/*
+	// Hairstyle
+	#defendDetails\\.pdatPedig\\.hairType
+
+	// Skin Tone
+	#defendDetails\\.pdatPedig\\.skinTone
+
+	// Complexion
+	#defendDetails\\.pdatPedig\\.skinCmplx
+
+	// Other Clothing/Accessories
+	#defendDetails\\.clothingDescription\\[3\\]\\.ucatItemType
+*/
+
+	// Distinguishing Body Marks
+	outStr += setOption("#defendDetails\\.bodyMark\\[0\\]\\.ucatItem", this.getField("DEFT DISTING BODY MARKS").value);
+	return outStr;
+}
+
 this.getField("output2").value = 
 /////////////////////
 // Arresting Officer
@@ -587,6 +677,9 @@ setValue("#defMdlName", this.getField("DEFT MI").value) +
 // Order of Protection
 setOption("#defendDetails\\.pdatPedig\\.opInEffect", this.getField("OrderOfProt").value) +
 
+// Nickname
+setValue("#defendDetails\\.nmatName\\.akaAlias", this.getField("DEFT NICKNAME").value) +
+
 // Sex
 MaleOrFemale() +
 
@@ -604,7 +697,7 @@ setOption("#defendDetails\\.pdatPedig\\.eyeColor", this.getField("DEFT EYECOLOR"
 // Hair Color
 setOption("#defendDetails\\.pdatPedig\\.hairColor", this.getField("DEFT HAIRCOLOR").value) +
 
-// Hair Lenght
+// Hair Length
 setOption("#defendDetails\\.pdatPedig\\.hairLength", this.getField("DEFT HAIRLENGTH").value) +
 
 // US Citizen
@@ -685,6 +778,9 @@ setValue("#defendDetails\\.unusualMoMethodOfFl\\.itemOther", this.getField("DEFT
 
 // M.O.
 MoInfo() +
+
+// Deft Description, outfit
+DeftDescript() +
 
 // Impersonation of
 setOption("#defendDetails\\.unusualMoImpersonation\\.ucatItem", this.getField("DEFT IMPRES OF").value) +
