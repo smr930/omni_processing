@@ -466,21 +466,29 @@ function DeftDescript() {
 	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[22\\]\\.ucatItem", this.getField("DEFT SPEC CHAR22").value);
 	outStr += setCheckbox("#defendDetails\\.specialCharacteristics\\[23\\]\\.ucatItem", this.getField("DEFT SPEC CHAR23").value);
 
-
-			/*
 	// Hairstyle
-	#defendDetails\\.pdatPedig\\.hairType
-
+	outStr += setOption("#defendDetails\\.pdatPedig\\.hairType", this.getField("DEFT HAIRSTYLE").value);
+	if(this.getField("DEFT HAIRSTYLE").value === 11) // 11: Other
+		outStr += setValue("#defendDetails\\.pdatPedig\\.hairTypeOther", this.getField("DEFT HAIRSTYLE OTHER").value);
+		
 	// Skin Tone
-	#defendDetails\\.pdatPedig\\.skinTone
-
-	// Complexion
-	#defendDetails\\.pdatPedig\\.skinCmplx
-
+	outStr += setOption("#defendDetails\\.pdatPedig\\.skinTone", this.getField("DEFT SKINTONE").value);
+	
+	// Complexion, BROWN is missing in OMNI
+	outStr += setOption("#defendDetails\\.pdatPedig\\.skinCmplx", this.getField("DEFT SKIN COMPLEXION").value);
+	if(this.getField("DEFT SKIN COMPLEXION").value === 6) // 6: Other
+		outStr += setValue("#defendDetails\\.pdatPedig\\.skinCmplxOther", this.getField("DEFT COMPLEX OTHER").value);
+	
 	// Other Clothing/Accessories
-	#defendDetails\\.clothingDescription\\[3\\]\\.ucatItemType
-*/
-
+	outStr += setOption("#defendDetails\\.clothingDescription\\[3\\]\\.ucatItemType", this.getField("DEFT OTHERF CLOTHING").value);
+	if(this.getField("DEFT OTHERF CLOTHING").value === 7) // 7: Other
+		outStr += setValue("#defendDetails\\.clothingDescription\\[3\\]\\.itemOther", this.getField("DEFT CLOTHING OTHER").value);
+	
+	if(this.getField("DEFT OTHERF CLOTHING").value !== 15) { // 15: UNK
+		outStr += setOption("#defendDetails\\.clothingDescription\\[3\\]\\.itemColor", this.getField("DEFT CLOTHING COLOR").value);
+		outStr += enableTextField('#defendDetails\\.clothingDescription\\[3\\]\\.itemColor');
+	}
+	
 	// Distinguishing Body Marks
 	outStr += setOption("#defendDetails\\.bodyMark\\[0\\]\\.ucatItem", this.getField("DEFT DISTING BODY MARKS").value);
 	return outStr;
@@ -560,6 +568,9 @@ setOption("#arrestInfo\\.perpLocType", this.getField("LocationOfPrisonerType0").
 // setOption("#arrestInfo\\.perpLocation", 20); // 20: 084 Precinct, Actual OMNI
 
 // Location of Occurrence / location of Arrest
+`document.querySelector("#arrInf > div:nth-child(14) > div:nth-child(1) > label").append("   -   [ARREST LOCATION]");` +
+`document.querySelector("#arrInf > div:nth-child(14) > div:nth-child(1) > label").style.color = "orange";` +
+
 setOption("#addrArrstAddress\\.location", this.getField("Check Box5345").value) +
 
 // Address #
