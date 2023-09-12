@@ -707,7 +707,7 @@ setValue("#defendDetails\\.pdatPedig\\.opExpDate", this.getField("ExpOOP").value
 setCheckbox('#defendDetails\\.nmatName\\.veteran', this.getField('Veteran').value) +
 
 // Nickname
-setValue("#defendDetails\\.nmatName\\.akaAlias", this.getField("DEFT NICKNAME").value) +
+setValueEscapeChar("#defendDetails\\.nmatName\\.akaAlias", this.getField("DEFT NICKNAME").value) +
 
 // Sex
 MaleOrFemale() +
