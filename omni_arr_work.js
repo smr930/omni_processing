@@ -30,6 +30,12 @@ function enableTextField(selector) {
 	return `document.querySelector("${outStr}").removeAttribute(\"disabled\");`;
 }
 
+function setValueEscapeChar(selector, value) {
+	if(value === '' || value === ' ' || value === undefined) return '';
+	const outStr = selector.split('\\').join('\\\\');
+	return `document.querySelector("${outStr}").value=` + `\`${value}\`;`;
+  }
+
 function getChart(squad) {
 	const squadLetter = this.getField(squad).value;
 	const letter = squadLetter.charAt(0);
@@ -100,7 +106,7 @@ function getCounty(county) {
 	//document.querySelector("#holderVehicle\\[0\\]\\.state").options.selectedIndex = 'NY';
   
 	// Expiration
-	setValue('#holderVehicle\\[0\\]\\.expire', this.getField('Expiration').value) +
+	setValue('#holderVehicle\\[0\\]\\.expire', this.getField('Expiration').valueAsString) +
   
 	// Vehicle Type
 	setOption('#holderVehicle\\[0\\]\\.vehType', this.getField('Vehicle Type').value) +
@@ -130,7 +136,7 @@ function getCounty(county) {
 	setValue('#holderVehicle\\[0\\]\\.insuranceCd', this.getField('Ins Code').value) +
   
 	// Policy #
-	setValue('#holderVehicle\\[0\\]\\.policyNum', this.getField('Policy No').value) +
+	setValue('#holderVehicle\\[0\\]\\.policyNum', this.getField('Policy No').valueAsString) +
   
 	// Invoice #
 	setValue('#holderVehicle\\[0\\]\\.voucher', this.getField('Invoice No').value) + 
@@ -145,13 +151,13 @@ function getCounty(county) {
 	setValue('#holderVehicle\\[0\\]\\.alarmNum', this.getField('Alarm No').value) + 
   
 	// Time
-	setValue('#holderVehicle\\[0\\]\\.alarmTime', this.getField('Time_4').value) + 
+	setValue('#holderVehicle\\[0\\]\\.alarmTime', this.getField('Time_4').valueAsString) + 
   
 	// Date
-	setValue('#holderVehicle\\[0\\]\\.alarmDate', this.getField('Date_4').value) + 
+	setValue('#holderVehicle\\[0\\]\\.alarmDate', this.getField('Date_4').valueAsString) + 
   
 	// Pct
-	setValue('#holderVehicle\\[0\\]\\.alarmPct', this.getField('Alarm Precinct').value) + 
+	setValue('#holderVehicle\\[0\\]\\.alarmPct', this.getField('Alarm Precinct').valueAsString) + 
   
 	// Transmitted by (Rank, Name)
 	setValue('#holderVehicle\\[0\\]\\.alarmXmitBy', this.getField('Transmitted By Rank Name').value) + 
@@ -547,11 +553,10 @@ setOption('#assistingOfficerInfo\\.aoInjured', this.getField("Inj_AssistOff").va
 setOption('#assistingOfficerInfo\\.aoBodyCam', this.getField("BWC_assistOff").value) +
 
 // Arrest time
-setValue('#arrestInfo\\.strArrTime', this.getField("Arrest Time").value.toString().length < 4 ? 
-         this.getField('Arrest Time').value.toString().padStart(4, '0'): this.getField('Arrest Time').value) +
+setValue('#arrestInfo\\.strArrTime', this.getField('Arrest Time').valueAsString) +
 
 // Arrest Date
-setValue('#arrestInfo\\.strArrDate', this.getField("M").value + '/' + this.getField("D").value + '/' + this.getField("Y").value) +
+setValue('#arrestInfo\\.strArrDate', this.getField("M").valueAsString + '/' + this.getField("D").valueAsString + '/' + this.getField("Y").valueAsString) +
 
 // Arrest Processing Type, 3: DAT, 5: Online
 setOption("#arrestInfo\\.arrProcType", this.getField("DAT_Offense").value) +
@@ -633,9 +638,10 @@ setValue("#defendDetails\\.nmatName\\.namef", this.getField("DEFT FIRST").value)
 setValue("#defendDetails\\.nmatName\\.namem", this.getField("DEFT MI").value) +
 
 // Date of Birth
-setValue("#defendDetails\\.nmatName\\.dob", this.getField("Text5").value) +
+setValue("#defendDetails\\.nmatName\\.dob", this.getField("Text5").valueAsString) +
 
 // Occupation
+setOption("#defendDetails\\.pdatPedig\\.occupation", this.getField("Occupation").value === '' ? 31 : '') +
 
 // Physical Condition
 setOption("#defendDetails\\.pdatPedig\\.physCond", this.getField("PhyCondition2").value) +
@@ -670,7 +676,7 @@ IMEIInfo() +
 setOption("#arrestInfo\\.recordPoliceActivity", 1) + 
 
 // Narrative
-setValue("#narratDetails\\.details", this.getField("61 narrative_1").value) +
+setValueEscapeChar("#narratDetails\\.details", this.getField("61 narrative_1").value) +
 
 //Approving Supervisor
 setOption("#arrestInfo\\.supvAgencyStr", 1) +
@@ -688,6 +694,18 @@ setValue("#defMdlName", this.getField("DEFT MI").value) +
 // Order of Protection
 setOption("#defendDetails\\.pdatPedig\\.opInEffect", this.getField("OrderOfProt").value) +
 
+// Issuing Court
+enableTextField('#defendDetails\\.pdatPedig\\.opIssuingCt') +
+
+// Docket #
+setValue("#defendDetails\\.pdatPedig\\.opDocketNum", this.getField("DocketNum").valueAsString) +
+
+// Exp. Date Of Order Of Protection
+setValue("#defendDetails\\.pdatPedig\\.opExpDate", this.getField("ExpOOP").valueAsString) +
+
+// Veteran
+setCheckbox('#defendDetails\\.nmatName\\.veteran', this.getField('Veteran').value) +
+
 // Nickname
 setValue("#defendDetails\\.nmatName\\.akaAlias", this.getField("DEFT NICKNAME").value) +
 
@@ -695,8 +713,8 @@ setValue("#defendDetails\\.nmatName\\.akaAlias", this.getField("DEFT NICKNAME").
 MaleOrFemale() +
 
 // Height and Weight
-setValue("#defendDetails\\.pdatPedig\\.heightFeet", this.getField("Text41").value) +
-setValue("#defendDetails\\.pdatPedig\\.heightInches", this.getField("Text42").value) +
+setValue("#defendDetails\\.pdatPedig\\.heightFeet", this.getField("Text41").valueAsString) +
+setValue("#defendDetails\\.pdatPedig\\.heightInches", this.getField("Text42").valueAsString) +
 setValue("#defendDetails\\.pdatPedig\\.weight", this.getField("Text43").value) +
 
 // Race
@@ -714,6 +732,9 @@ setOption("#defendDetails\\.pdatPedig\\.hairLength", this.getField("DEFT HAIRLEN
 // US Citizen
 setOption("#defendDetails\\.pdatPedig\\.citizen", this.getField("DEFT US CITIZEN").value) +
 
+// State/Country of Birth
+setOption("#defendDetails\\.pdatPedig\\.placeBirth", this.getField("DEFT STATE COUNTRY").value === 'USA' ? 353 : '') +
+
 // Permanent Residence Address
 // Address Location
 setOption("#defendDetails\\.addrResAddress\\.resCode", this.getField("DEFT ADDRESS STATUS").value) + 
@@ -725,7 +746,13 @@ setValue("#defendDetails\\.addrResAddress\\.addressNum", this.getField("Defts Ho
 setValue("#defendDetails\\.addrResAddress\\.streetName", this.getField("Defts Home Address Street").value) +
 
 // City
-setOption("#defendDetails\\.addrResAddress\\.borough", getCity("City")) +
+setValue("#defendDetails\\.addrResAddress\\.city", this.getField("City").value) +
+
+// State, 236: NY
+setOption("#defendDetails\\.addrResAddress\\.state", this.getField("StateCountry").value === 'NY' ? 236 : '') +
+
+// Zip
+setValue("#defendDetails\\.addrResAddress\\.zip", this.getField("Zip").value) +
 
 // Zip
 setValue("#defendDetails\\.addrResAddress\\.zip", this.getField("Zip").value) +
@@ -782,10 +809,10 @@ setOption("#defendDetails\\.nmatName\\.gangAffiliate", this.getField("DEFT GANG 
 setOption("#defendDetails\\.perpUsedTA", this.getField("DEFT USED SUBW").value) +
 
 // Statement made by Perpetrator
-setValue("#defendDetails\\.unusualMoStatement\\.itemOther", this.getField("DEFT MADE STATEMENT").value) +
+setValueEscapeChar("#defendDetails\\.unusualMoStatement\\.itemOther", this.getField("DEFT MADE STATEMENT").value) +
 
 // Method of Flight
-setValue("#defendDetails\\.unusualMoMethodOfFl\\.itemOther", this.getField("DEFT METHOD OF FLIGHT").value) +
+setValueEscapeChar("#defendDetails\\.unusualMoMethodOfFl\\.itemOther", this.getField("DEFT METHOD OF FLIGHT").value) +
 
 // M.O.
 MoInfo() +
