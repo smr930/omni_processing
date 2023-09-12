@@ -23,6 +23,12 @@ function setCheckbox(selector, value) {
   return `document.querySelector("${outStr}").checked=` + `${value};`;
 }
 
+function setValueEscapeChar(selector, value) {
+	if(value === '' || value === ' ' || value === undefined) return '';
+	const outStr = selector.split('\\').join('\\\\');
+	return `document.querySelector("${outStr}").value=` + `\`${value}\`;`;
+  }
+
 function getCounty(county) {
   switch (this.getField(county).value) {
     case '': return '';
@@ -173,10 +179,10 @@ function CvInfo() {
   setOption("#holderVictim\\[0\\]\\.nmatName\\.interpNeeded", this.getField('group_34').value) +
 
   // Nickname/Alias/Maiden Name
-  setValue("#holderVictim\\[0\\]\\.nmatName\\.akaAlias", this.getField('NicknameAliasMaiden Name').value) +
+  setValueEscapeChar("#holderVictim\\[0\\]\\.nmatName\\.akaAlias", this.getField('NicknameAliasMaiden Name').value) +
 
   // Date of Birth
-  setValue("#holderVictim\\[0\\]\\.nmatName\\.dob", this.getField('cv m').value + '/' + this.getField('cv d').value + '/' + this.getField('cv y').value) +
+  setValue("#holderVictim\\[0\\]\\.nmatName\\.dob", this.getField('cv m').valueAsString + '/' + this.getField('cv d').valueAsString + '/' + this.getField('cv y').valueAsString) +
   
   // Race, 5: Unknown race
   setOption("#holderVictim\\[0\\]\\.nmatName\\.race", this.getField('Race').value === 'Off' ? 5 : this.getField('Race').value) +
@@ -237,8 +243,8 @@ function CvInfo() {
   setOption("#holderVictim\\[0\\]\\.nmatName\\.slashed", this.getField('Slashed').value === 'Off' ? 2 : this.getField('Slashed').value) +
 
   // Actions of Victim Prior to Incident
-  setValue("#holderDetails\\[0\\]\\.details", this.getField('fill_58_2').value) +
-  //setValue("#holderVictim\\[0\\]\\.holderDetails\\[0\\]\\.details", this.getField('fill_58_2').value) +  // On actual OMNI, this works
+  //setValueEscapeChar("#holderDetails\\[0\\]\\.details", this.getField('fill_58_2').value) +
+  setValueEscapeChar("#holderVictim\\[0\\]\\.holderDetails\\[0\\]\\.details", this.getField('fill_58_2').value) +  // On actual OMNI, this works
 
   // Victim of Similar Incident 
   setOption("#holderVictim\\[0\\]\\.nmatName\\.victSimIncid", this.getField('EXCEPT SEX OFFENSE').value) +
@@ -285,13 +291,13 @@ function ReporterWitnessInfo() {
     setOption("#holderWitness\\[0\\]\\.nmatName\\.interpNeeded", this.getField('group_47').value) +
   
     // Nickname/Alias/Maiden Name
-    setValue("#holderWitness\\[0\\]\\.nmatName\\.akaAlias", this.getField('NicknameAliasMaiden Name_2').value) +
+    setValueEscapeChar("#holderWitness\\[0\\]\\.nmatName\\.akaAlias", this.getField('NicknameAliasMaiden Name_2').value) +
     
     // Sex
     setOption("#holderWitness\\[0\\]\\.nmatName\\.sex", this.getField('RW_Sex').value) +
 
     // Date of Birth
-    setValue("#holderWitness\\[0\\]\\.nmatName\\.dob", this.getField('witt m').value + '/' + this.getField('witt d').value + '/' + this.getField('witt y').value) +
+    setValue("#holderWitness\\[0\\]\\.nmatName\\.dob", this.getField('witt m').valueAsString + '/' + this.getField('witt d').valueAsString + '/' + this.getField('witt y').valueAsString) +
     
     // Race
     setOption("#holderWitness\\[0\\]\\.nmatName\\.race", this.getField('Race_RW').value === 'Off' ? 5 : this.getField('Race_RW').value) +
@@ -328,7 +334,7 @@ function ReporterWitnessInfo() {
     setValue("#holderWitness\\[0\\]\\.cellPhone\\.phoneNum", this.getField('Text27').value.toString() + this.getField('Text21A').value + this.getField('Text21B').value) +
     
     // Email Address
-    setValue("#holderWitness\\[0\\]\\.emailAddr\\.name", this.getField('EMail Address_2').value) +
+    setValue("#holderWitness\\[0\\]\\.emailAddr\\.name", this.getField('EMail Address_2').valueAsString) +
     
     // Suspected Gang Member
     setOption("#holderWitness\\[0\\]\\.nmatName\\.gangAffiliate", this.getField('group_48').value) +
@@ -358,7 +364,7 @@ function VehicleInfo() {
   //document.querySelector("#holderVehicle\\[0\\]\\.state").options.selectedIndex = 'NY';
 
   // Expiration
-  setValue('#holderVehicle\\[0\\]\\.expire', this.getField('Expiration').value) +
+  setValue('#holderVehicle\\[0\\]\\.expire', this.getField('Expiration').valueAsString) +
 
   // Vehicle Type
   setOption('#holderVehicle\\[0\\]\\.vehType', this.getField('Vehicle Type').value) +
@@ -388,7 +394,7 @@ function VehicleInfo() {
   setValue('#holderVehicle\\[0\\]\\.insuranceCd', this.getField('Ins Code').value) +
 
   // Policy #
-  setValue('#holderVehicle\\[0\\]\\.policyNum', this.getField('Policy No').value) +
+  setValue('#holderVehicle\\[0\\]\\.policyNum', this.getField('Policy No').valueAsString) +
 
   // Invoice #
   setValue('#holderVehicle\\[0\\]\\.voucher', this.getField('Invoice No').value) + 
@@ -403,13 +409,13 @@ function VehicleInfo() {
   setValue('#holderVehicle\\[0\\]\\.alarmNum', this.getField('Alarm No').value) + 
 
   // Time
-  setValue('#holderVehicle\\[0\\]\\.alarmTime', this.getField('Time_4').value) + 
+  setValue('#holderVehicle\\[0\\]\\.alarmTime', this.getField('Time_4').valueAsString) + 
 
   // Date
-  setValue('#holderVehicle\\[0\\]\\.alarmDate', this.getField('Date_4').value) + 
+  setValue('#holderVehicle\\[0\\]\\.alarmDate', this.getField('Date_4').valueAsString) + 
 
   // Pct
-  setValue('#holderVehicle\\[0\\]\\.alarmPct', this.getField('Alarm Precinct').value) + 
+  setValue('#holderVehicle\\[0\\]\\.alarmPct', this.getField('Alarm Precinct').valueAsString) + 
 
   // Transmitted by (Rank, Name)
   setValue('#holderVehicle\\[0\\]\\.alarmXmitBy', this.getField('Transmitted By Rank Name').value) + 
@@ -457,7 +463,7 @@ function IMEIInfo() {
   // Cell Phone #
   setValue('#holderDeviceInfo\\[0\\]\\.pedTelNum', this.getField('Text51').value) +
   
-  // Carrier
+  // Carrier, 5: Other
   setOption('#holderDeviceInfo\\[0\\]\\.acctCarrier', 5) +
 
   // Other
@@ -478,6 +484,7 @@ function IMEIInfo() {
     return `setTimeout(() => { document.querySelector("#deviceInfoHeader > a.link").click(); ${imei_str};}, 2000);`
   }
 }
+
 
 function setProperty(i) {
   var PropInvLetter;
@@ -603,27 +610,27 @@ this.getField('output1').value =
   setOption('#addrStatAddress\\.corner', this.getField('Check Box66').value) +
 
   // Report Time
-  setValue('#uf61Statistics\\.rptTime', this.getField('Time').value.toString().length < 4 ? this.getField('Time').value.toString().padStart(4, '0'): this.getField('Time').value) +
+  setValue('#uf61Statistics\\.rptTime', this.getField('Time').valueAsString) +
   // Report Date
-  setValue('#uf61Statistics\\.reportDate', this.getField('Date').value) +
+  setValue('#uf61Statistics\\.reportDate', this.getField('Date').valueAsString) +
   /// Occurrence On or From
   // Time
-  setValue('#uf61Statistics\\.occFromTime', this.getField('Time_2').value.toString().length < 4 ? this.getField('Time_2').value.toString().padStart(4, '0'): this.getField('Time_2').value) +
+  setValue('#uf61Statistics\\.occFromTime', this.getField('Time_2').valueAsString) +
   // Date
-  setValue('#uf61Statistics\\.FromDate', this.getField('Date_2').value) +
+  setValue('#uf61Statistics\\.FromDate', this.getField('Date_2').valueAsString) +
   // Day of Week
 
   /// Occurrence Through
   // Time
-  setValue('#uf61Statistics\\.occToTime', this.getField('Time_3').value.toString().length < 4 ? this.getField('Time_3').value.toString().padStart(4, '0'): this.getField('Time_3').value) +
+  setValue('#uf61Statistics\\.occToTime', this.getField('Time_3').valueAsString) +
   // Date
-  setValue('#uf61Statistics\\.toDate', this.getField('Date_3').value) +
+  setValue('#uf61Statistics\\.toDate', this.getField('Date_3').valueAsString) +
   // Pct Of Occur
-  setValue('#addrStatAddress\\.pct', this.getField('Pct Of Occ').value) +
+  setValue('#addrStatAddress\\.pct', this.getField('Pct Of Occ').valueAsString) +
   // Aided #
-  setValue('#aiatAided\\.aiatNumber', this.getField('AIDED').value) +
+  setValue('#aiatAided\\.aiatNumber', this.getField('AIDED').valueAsString) +
   // Accident #
-  setValue('#aiatAccident\\.aiatNumber', this.getField('Accident').value) +
+  setValue('#aiatAccident\\.aiatNumber', this.getField('Accident').valueAsString) +
   // Case Open/Closed
   setOption('#uf61Statistics\\.casestat', 1) +
   setOption('#uf61Statistics\\.clearCode', 1) +
@@ -724,7 +731,6 @@ this.getField('output1').value =
   setOption("#uf61Statistics\\.crimePrev", this.getField('Requested').value) +
   
   // Supervisor On Scene?
-  //setOption("#uf61Statistics\\.superOnScene", this.getField('Supervisor On Scene').value) + 
   SuperVisorOnSceneYes() +
   
   // Canvass Conducted
@@ -734,7 +740,7 @@ this.getField('output1').value =
   setOption("#interpreterUsed", this.getField('Was Translator Used').value) +
 
   // 61 Narrative
-  setValue("#investigationResultsText", this.getField('61 narrative_1').value) +
+  setValueEscapeChar("#investigationResultsText", this.getField('61 narrative_1').value) +
 
   // N.Y.C. Dept. Of Ed. School Incident
   setOption("#uf61Statistics\\.ssIncident", this.getField('Incident').value) + 
